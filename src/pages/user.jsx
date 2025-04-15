@@ -1,4 +1,4 @@
-import { Table } from "antd";
+import { notification, Table } from "antd";
 import { useEffect, useState } from "react";
 import { getUserApi } from "../utils/api";
 
@@ -7,8 +7,13 @@ const UserPage = () => {
     useEffect(() => {
         const fetchUser = async () => {
             const res = await getUserApi()
-            if (res) {
+            if (!res?.message) {
                 setDataSource(res)
+            } else {
+                notification.error({
+                    message: "Unauthorized",
+                    description: res.message
+                })
             }
         }
         fetchUser();
@@ -35,10 +40,10 @@ const UserPage = () => {
 
     return (
         <div style={{ padding: 30 }}>
-            <Table 
-            dataSource={dataSource} 
-            columns={columns} 
-            rowKey={"_id"}
+            <Table
+                dataSource={dataSource}
+                columns={columns}
+                rowKey={"_id"}
             />;
         </div>
     )
