@@ -1,12 +1,12 @@
 import { notification, Table } from "antd";
 import { useEffect, useState } from "react";
-import { getUserApi } from "../utils/api";
+import { getSystemApi } from "../utils/api";
 
-const UserPage = () => {
+const SystemPage = () => {
     const [dataSource, setDataSource] = useState([])
     useEffect(() => {
         const fetchUser = async () => {
-            const res = await getUserApi()
+            const res = await getSystemApi()
             if (!res?.message) {
                 setDataSource(res)
             } else {
@@ -21,20 +21,32 @@ const UserPage = () => {
 
     const columns = [
         {
-            title: 'Email',
-            dataIndex: 'email',
-        },
-        {
             title: 'Name',
             dataIndex: 'name',
         },
         {
-            title: 'Id',
-            dataIndex: '_id',
+            title: 'Description',
+            dataIndex: 'description',
         },
         {
-            title: 'Role',
-            dataIndex: 'role',
+            title: 'Link Access',
+            dataIndex: 'linkAccess',
+        },
+        {
+            title: 'Link Instruct',
+            dataIndex: 'linkInstruct',
+        },
+        {
+            title: 'Managing Unit',
+            dataIndex: 'managingUnit',
+        },
+        {
+            title: 'Contact Point',
+            dataIndex: 'contactPoint',
+        },
+        {
+            title: 'Id',
+            dataIndex: '_id',
         },
     ];
 
@@ -48,4 +60,4 @@ const UserPage = () => {
         </div>
     )
 }
-export default UserPage
+export default SystemPage

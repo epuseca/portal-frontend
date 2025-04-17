@@ -14,8 +14,18 @@ const getUserApi = () => {
     const URL_API = "/v1/api/user"
     return axios.get(URL_API)
 }
+const getTagApi = () => {
+    const URL_API = "/v1/api/tag"
+    return axios.get(URL_API)
+}
+const getSystemApi = () => {
+    const URL_API = "/v1/api/system"
+    return axios.get(URL_API)
+}
 export {
     createUserApi,
     loginApi,
-    getUserApi
+    getUserApi,
+    getTagApi,
+    getSystemApi
 }

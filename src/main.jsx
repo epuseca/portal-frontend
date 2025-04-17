@@ -10,7 +10,9 @@ import RegiserPage from './pages/register.jsx';
 import UserPage from './pages/user.jsx';
 import HomePage from './pages/home.jsx';
 import LoginPage from './pages/login.jsx';
+import TagPage from './pages/tag.jsx';
 import { AuthWrapper } from './components/context/auth.context.jsx';
+import SystemPage from './pages/system.jsx';
 
 const router = createBrowserRouter([
   {
@@ -24,6 +26,14 @@ const router = createBrowserRouter([
       {
         path: "/user",
         element: <UserPage />
+      },
+      {
+        path: "/tag",
+        element: <TagPage />
+      },
+      {
+        path: "/system",
+        element: <SystemPage />
       },
     ]
   },
