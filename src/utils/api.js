@@ -22,10 +22,16 @@ const getSystemApi = () => {
     const URL_API = "/v1/api/system"
     return axios.get(URL_API)
 }
+const getTagApiHome = () => {
+    const URL_API = "/v1/api/?populate=listSystem"
+    return axios.get(URL_API)
+}
 export {
     createUserApi,
     loginApi,
     getUserApi,
     getTagApi,
-    getSystemApi
+    getSystemApi,
+    getTagApiHome,
+
 }
