@@ -1,4 +1,4 @@
-import { EditOutlined, EllipsisOutlined, SettingOutlined } from "@ant-design/icons"
+import { DoubleRightOutlined, EditOutlined, EllipsisOutlined, SettingOutlined } from "@ant-design/icons"
 import { Avatar, Card, List, Carousel, Row, Col, Button, Pagination, Typography, Popover, Empty } from 'antd';
 import React, { useEffect, useState } from "react";
 import '../styles/home/slideShow.css'; // Nếu tách CSS
@@ -61,8 +61,7 @@ const HomePage = () => {
                     }
                     actions={[
                         <SettingOutlined key="setting" />,
-                        <EditOutlined key="edit" />,
-                        <EllipsisOutlined key="ellipsis" />
+                        <DoubleRightOutlined key="access" />
                     ]}
                 >
                     <Meta
