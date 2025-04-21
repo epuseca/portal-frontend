@@ -14,6 +14,9 @@ const getUserApi = () => {
     const URL_API = "/v1/api/user"
     return axios.get(URL_API)
 }
+const delUserApi = (id) => {
+    return axios.delete(`/v1/api/user/${id}`);
+};
 const getTagApi = () => {
     const URL_API = "/v1/api/tag"
     return axios.get(URL_API)
@@ -26,6 +29,12 @@ const getTagApiHome = () => {
     const URL_API = "/v1/api/?populate=listSystem"
     return axios.get(URL_API)
 }
+const updateUserApi = (data) => {
+    const URL_API = `/v1/api/user/${data.id}`;
+    return axios.put(URL_API, data); // data không cần chứa `id`, nhưng không sao nếu có
+};
+
+
 export {
     createUserApi,
     loginApi,
@@ -33,5 +42,6 @@ export {
     getTagApi,
     getSystemApi,
     getTagApiHome,
-
+    delUserApi,
+    updateUserApi,
 }

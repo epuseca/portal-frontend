@@ -13,6 +13,7 @@ import LoginPage from './pages/login.jsx';
 import TagPage from './pages/tag.jsx';
 import { AuthWrapper } from './components/context/auth.context.jsx';
 import SystemPage from './pages/system.jsx';
+import CreateUser from './components/layout/user/createUser.jsx';
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
         element: <UserPage />
       },
       {
+        path: "/user/create", 
+        element: <CreateUser />
+      },
+      {
         path: "/tag",
         element: <TagPage />
       },
@@ -35,6 +40,7 @@ const router = createBrowserRouter([
         path: "/system",
         element: <SystemPage />
       },
+      
     ]
   },
   {

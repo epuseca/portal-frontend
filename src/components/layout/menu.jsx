@@ -15,7 +15,7 @@ const items = [
         icon: <UsergroupAddOutlined />,
         children: [
             { key: "1", label: <Link to={'/user'}>User's information</Link> },
-            { key: "2", label: "Create new user" },
+            { key: "2", label: <Link to={"/user/create"}>Create new user</Link> },
         ],
     },
     {
