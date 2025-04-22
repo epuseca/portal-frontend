@@ -28,7 +28,7 @@ const updateUserApi = (data) => {
     return axios.put(URL_API, data); // data không cần chứa `id`, nhưng không sao nếu có
 };
 const getTagApi = () => {
-    const URL_API = "/v1/api/tag"
+    const URL_API = "/v1/api/tag?populate=listSystem"
     return axios.get(URL_API)
 }
 const createTagApi = (name, description) => {

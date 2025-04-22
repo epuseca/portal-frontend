@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { notification, Table, Menu, Row, Col, Typography, Button } from "antd";
+import { notification, Table, Menu, Row, Col, Typography, Button, Popover } from "antd";
 import { delTagApi, getTagApi } from "../utils/api";
 
 import MenuPage from "../components/layout/menu";
@@ -55,7 +55,23 @@ const TagPage = () => {
         {
             title: "ListSystem",
             dataIndex: "listSystem",
-            render: (list) => (list ? list.map((s) => s.name).join(", ") : "-"),
+            render: (list) => {
+                if (!list || list.length === 0) return "-";
+                const content = (
+                    <div style={{ maxWidth: 200 }}>
+                        {list.map((system) => (
+                            <div key={system._id || system.name}>
+                                • {system.name}
+                            </div>
+                        ))}
+                    </div>
+                );
+                return (
+                    <Popover content={content} title="Danh sách hệ thống" trigger="hover">
+                        <Button type="link" >Info</Button>
+                    </Popover>
+                );
+            },
         },
         {
             title: "Id",
