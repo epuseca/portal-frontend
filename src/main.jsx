@@ -15,6 +15,7 @@ import { AuthWrapper } from './components/context/auth.context.jsx';
 import SystemPage from './pages/system.jsx';
 import CreateUser from './components/layout/user/createUser.jsx';
 import CreateTag from './components/layout/tag/createTag.jsx';
+import CreateSystem from './components/layout/system/createSystem.jsx';
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
       {
         path: "/system",
         element: <SystemPage />
+      },
+      {
+        path: "/system/create",
+        element: <CreateSystem />
       },
 
     ]

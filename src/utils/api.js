@@ -18,10 +18,7 @@ const delUserApi = (id) => {
     return axios.delete(`/v1/api/user/${id}`);
 };
 
-const getSystemApi = () => {
-    const URL_API = "/v1/api/system"
-    return axios.get(URL_API)
-}
+
 const getTagApiHome = () => {
     const URL_API = "/v1/api/?populate=listSystem"
     return axios.get(URL_API)
@@ -46,6 +43,23 @@ const updateTagApi = (data) => {
 const delTagApi = (id) => {
     return axios.delete(`/v1/api/tag/${id}`);
 };
+
+const getSystemApi = () => {
+    const URL_API = "/v1/api/system"
+    return axios.get(URL_API)
+}
+const createSystemApi = (name, description, linkAccess, linkInstruct, managingUnit, contactPoint) => {
+    const URL_API = "/v1/api/system";
+    const data = { name, description, linkAccess, linkInstruct, managingUnit, contactPoint }
+    return axios.post(URL_API, data)
+}
+const updateSystemApi = (data) => {
+    const URL_API = `/v1/api/system/${data.id}`;
+    return axios.put(URL_API, data);
+};
+const delSystemApi = (id) => {
+    return axios.delete(`/v1/api/system/${id}`);
+};
 export {
     createUserApi,
     loginApi,
@@ -57,5 +71,8 @@ export {
     updateUserApi,
     createTagApi,
     updateTagApi,
-    delTagApi
+    delTagApi,
+    createSystemApi,
+    updateSystemApi,
+    delSystemApi
 }

@@ -1,16 +1,16 @@
 // src/components/user/UserDeleteButton.jsx
 import { Button, Popconfirm } from "antd";
 
-const TagDeleteButton = ({ tag, onDelete }) => {
+const SystemDeleteButton = ({ system, onDelete }) => {
     const handleConfirm = () => {
-        if (onDelete && tag?._id) {
-            onDelete(tag._id);
+        if (onDelete && system?._id) {
+            onDelete(system._id);
         }
     };
 
     return (
         <Popconfirm
-            title={`Are you sure to delete tag: "${tag.name}"?`}
+            title={`Are you sure to delete system: "${system.name}"?`}
             onConfirm={handleConfirm}
             okText="Yes"
             cancelText="No"
@@ -20,4 +20,4 @@ const TagDeleteButton = ({ tag, onDelete }) => {
     );
 };
 
-export default TagDeleteButton;
+export default SystemDeleteButton;

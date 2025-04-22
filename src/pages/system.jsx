@@ -1,13 +1,18 @@
-import { Col, notification, Row, Table, Typography } from "antd";
+import { Button, Col, notification, Row, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
-import { getSystemApi } from "../utils/api";
+import { delSystemApi, getSystemApi } from "../utils/api";
 import MenuPage from "../components/layout/menu";
+import EditSystemModal from "../components/layout/system/editSystem";
+import SystemDeleteButton from "../components/layout/system/deleteSystem";
 
 const SystemPage = () => {
     const [dataSource, setDataSource] = useState([])
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currentSystem, setCurrentSystem] = useState(null);
     useEffect(() => {
         const fetchUser = async () => {
             const res = await getSystemApi()
+            console.log("RES", res)
             if (!res?.message) {
                 setDataSource(res)
             } else {
@@ -19,7 +24,25 @@ const SystemPage = () => {
         }
         fetchUser();
     }, [])
+    const handleDelete = async (id) => {
+        try {
+            await delSystemApi(id);
+            notification.success({ message: "User deleted successfully" });
+            setDataSource(prev => prev.filter(system => system._id !== id));
+        } catch (err) {
+            notification.error({ message: "Delete failed", description: err.message });
+        }
+    };
+    const handleEdit = (record) => {
+        setCurrentSystem(record);
+        setIsModalOpen(true);
+    };
 
+    const handleUpdateSystem = (updatedSystem) => {
+        setDataSource(prev =>
+            prev.map(system => system._id === updatedSystem._id ? updatedSystem : system)
+        );
+    };
     const columns = [
         {
             title: 'Name',
@@ -49,6 +72,15 @@ const SystemPage = () => {
             title: 'Id',
             dataIndex: '_id',
         },
+        {
+            title: 'Action',
+            render: (_, record) => (
+                <div style={{ display: 'flex', gap: 8 }}>
+                    <Button type="default" onClick={() => handleEdit(record)}>Edit</Button>
+                    <SystemDeleteButton system={record} onDelete={handleDelete} />
+                </div>
+            ),
+        }
     ];
     const onClick = (e) => {
         console.log("Menu click ", e);
@@ -60,7 +92,7 @@ const SystemPage = () => {
                 <Col span={6}>
                     <MenuPage
                         onClick={onClick}
-                        defaultSelectedKeys={["tag-info"]}
+                        defaultSelectedKeys={["system-info"]}
                         defaultOpenKeys={["sub3"]}
                     />
                 </Col>
@@ -76,8 +108,13 @@ const SystemPage = () => {
                     />
                 </Col>
             </Row>
+            <EditSystemModal
+                visible={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                system={currentSystem}
+                onUpdate={handleUpdateSystem}
+            />
         </div>
-
     )
 }
 export default SystemPage

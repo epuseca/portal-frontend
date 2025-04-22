@@ -39,7 +39,7 @@ const items = [
         icon: <SlackOutlined />,
         children: [
             { key: "5", label: <Link to={'/system'}>System's information</Link> },
-            { key: "6", label: "Create new system" },
+            { key: "6", label: <Link to={'/system/create'}>Create new system</Link> },
         ],
     },
 
