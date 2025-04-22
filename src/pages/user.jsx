@@ -5,7 +5,7 @@ import MenuPage from "../components/layout/menu";
 import { UsergroupAddOutlined } from "@ant-design/icons";
 import UserDeleteButton from "../components/layout/user/deleteUser";
 import EditUserModal from "../components/layout/user/editUser";
-
+import "../styles/admin/table.css"
 const UserPage = () => {
     const [dataSource, setDataSource] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -47,18 +47,24 @@ const UserPage = () => {
         {
             title: 'Email',
             dataIndex: 'email',
+            width: 300,
+            ellipsis: true,
         },
         {
             title: 'Name',
             dataIndex: 'name',
+            width: 250,
+            ellipsis: true,
         },
-        {
-            title: 'Id',
-            dataIndex: '_id',
-        },
+        // {
+        //     title: 'Id',
+        //     dataIndex: '_id',
+        // },
         {
             title: 'Role',
             dataIndex: 'role',
+            width: 250,
+            ellipsis: true,
         },
         {
             title: 'Action',
@@ -69,7 +75,7 @@ const UserPage = () => {
                 </div>
             ),
         }
-        
+
     ];
     const onClick = (e) => {
         console.log("Menu click ", e);
@@ -77,16 +83,16 @@ const UserPage = () => {
 
     return (
         <div >
-            <Row gutter={0}>
-                <Col span={6}>
+            <Row gutter={0} className="custom-layout">
+                <Col span={6} className="custom-sidebar">
                     <MenuPage
                         onClick={onClick}
                         defaultSelectedKeys={["tag-info"]}
                         defaultOpenKeys={["sub1"]}
                     />
                 </Col>
-                <Col span={18} style={{ padding: 16 }}>
-                    <Typography.Title level={3} style={{ marginBottom: 16 }}>
+                <Col span={18} className="custom-content">
+                    <Typography.Title level={3} style={{ marginBottom: 16, padding: 16 }}>
                         User's list
                     </Typography.Title>
                     <Table

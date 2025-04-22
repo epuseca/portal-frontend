@@ -47,16 +47,21 @@ const TagPage = () => {
         {
             title: "Name",
             dataIndex: "name",
+            width: 300,
+            ellipsis: true,
         },
         {
             title: "Description",
             dataIndex: "description",
+            width: 300,
+            ellipsis: true,
         },
         {
             title: "ListSystem",
             dataIndex: "listSystem",
+            width: 200,
+            ellipsis: true,
             render: (list) => {
-                if (!list || list.length === 0) return "-";
                 const content = (
                     <div style={{ maxWidth: 200 }}>
                         {list.map((system) => (
@@ -68,15 +73,15 @@ const TagPage = () => {
                 );
                 return (
                     <Popover content={content} title="Danh sách hệ thống" trigger="hover">
-                        <Button type="link" >Info</Button>
+                        <Button type="link" >{list.length}: System</Button>
                     </Popover>
                 );
             },
         },
-        {
-            title: "Id",
-            dataIndex: "_id",
-        },
+        // {
+        //     title: "Id",
+        //     dataIndex: "_id",
+        // },
         {
             title: 'Action',
             render: (_, record) => (
@@ -102,8 +107,8 @@ const TagPage = () => {
                         defaultOpenKeys={["sub2"]}
                     />
                 </Col>
-                <Col span={18} style={{ padding: 16 }}>
-                    <Typography.Title level={3} style={{ marginBottom: 16 }}>
+                <Col span={18}>
+                    <Typography.Title level={3} style={{ marginBottom: 16, padding: 16 }}>
                         Tag's list
                     </Typography.Title>
                     <Table

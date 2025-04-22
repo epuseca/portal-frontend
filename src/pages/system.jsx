@@ -47,33 +47,48 @@ const SystemPage = () => {
         {
             title: 'Name',
             dataIndex: 'name',
+            width: 150,
+            ellipsis: true,
         },
         {
             title: 'Description',
             dataIndex: 'description',
+            width: 120,
+            ellipsis: true,
         },
         {
             title: 'Link Access',
             dataIndex: 'linkAccess',
+            width: 120,
+            ellipsis: true,
         },
         {
             title: 'Link Instruct',
             dataIndex: 'linkInstruct',
+            width: 120,
+            ellipsis: true,
         },
         {
             title: 'Managing Unit',
             dataIndex: 'managingUnit',
+            width: 120,
+            ellipsis: true,
         },
         {
             title: 'Contact Point',
             dataIndex: 'contactPoint',
+            width: 120,
+            ellipsis: true,
         },
-        {
-            title: 'Id',
-            dataIndex: '_id',
-        },
+        // {
+        //     title: 'Id',
+        //     dataIndex: '_id',
+        //     width: 120,
+        //     ellipsis: true,
+        // },
         {
             title: 'Action',
+            width: 200,
             render: (_, record) => (
                 <div style={{ display: 'flex', gap: 8 }}>
                     <Button type="default" onClick={() => handleEdit(record)}>Edit</Button>
@@ -82,6 +97,7 @@ const SystemPage = () => {
             ),
         }
     ];
+    
     const onClick = (e) => {
         console.log("Menu click ", e);
     };
@@ -96,8 +112,8 @@ const SystemPage = () => {
                         defaultOpenKeys={["sub3"]}
                     />
                 </Col>
-                <Col span={18} style={{ padding: 16 }}>
-                    <Typography.Title level={3} style={{ marginBottom: 16 }}>
+                <Col span={18} >
+                    <Typography.Title level={3} style={{ marginBottom: 16 , padding: 16}}>
                         System's list
                     </Typography.Title>
                     <Table

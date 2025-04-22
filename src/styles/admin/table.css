@@ -1,0 +1,15 @@
+.custom-layout {
+    height: 100vh; /* full chiều cao màn hình */
+    overflow: hidden;
+}
+
+.custom-sidebar {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.custom-content {
+    height: 100%;
+    width: 80%;
+    overflow-y: auto;
+}
