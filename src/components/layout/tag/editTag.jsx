@@ -1,26 +1,24 @@
-// src/components/layout/user/EditUserModal.jsx
 import { Form, Input, Modal, notification } from "antd";
 import { useEffect } from "react";
-import { updateUserApi } from "../../../utils/api";
+import { updateTagApi } from "../../../utils/api";
 
-const EditUserModal = ({ visible, onClose, user, onUpdate }) => {
+const EditTagModal = ({ visible, onClose, tag, onUpdate }) => {
     const [form] = Form.useForm();
 
     useEffect(() => {
-        console.log("User:", user)
-        if (user) {
-            form.setFieldsValue(user);
+        if (tag) {
+            form.setFieldsValue(tag);
         }
-    }, [user, form]);
+    }, [tag, form]);
 
     const handleSubmit = async () => {
         try {
             const values = await form.validateFields();
-            const payload = { ...values, id: user._id };
-            const res = await updateUserApi(payload);
-            notification.success({ message: "User updated successfully" });
-            onUpdate(res); 
-            onClose(); 
+            const payload = { ...values, id: tag._id };
+            const res = await updateTagApi(payload);
+            notification.success({ message: "Tag updated successfully" });
+            onUpdate(res);
+            onClose();
         } catch (err) {
             notification.error({ message: "Update failed", description: err.message });
         }
@@ -28,7 +26,7 @@ const EditUserModal = ({ visible, onClose, user, onUpdate }) => {
 
     return (
         <Modal
-            title="Edit User"
+            title="Tag User"
             open={visible}
             onOk={handleSubmit}
             onCancel={onClose}
@@ -44,19 +42,18 @@ const EditUserModal = ({ visible, onClose, user, onUpdate }) => {
                     <Input />
                 </Form.Item>
                 <Form.Item
-                    name="email"
-                    label="Email"
+                    name="description"
+                    label="Description"
                     rules={[
-                        { required: true, message: "Please input email" },
-                        { type: "email", message: "Invalid email format" }
+                        { required: true, message: "Please input description" },
                     ]}
                 >
                     <Input />
                 </Form.Item>
                 <Form.Item
-                    name="role"
-                    label="Role"
-                    rules={[{ required: true, message: "Please input role" }]}
+                    name="listSystem"
+                    label="ListSystem"
+                    rules={[{ required: false, message: "Please input listSystem" }]}
                 >
                     <Input />
                 </Form.Item>
@@ -65,4 +62,4 @@ const EditUserModal = ({ visible, onClose, user, onUpdate }) => {
     );
 };
 
-export default EditUserModal;
+export default EditTagModal;

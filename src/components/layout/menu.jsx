@@ -27,7 +27,7 @@ const items = [
         icon: <CodeSandboxOutlined />,
         children: [
             { key: "3", label: <Link to={'/tag'}>Tag's information</Link> },
-            { key: "4", label: "Create new tag" },
+            { key: "4", label: <Link to={'/tag/create'}>Create new tag</Link> },
         ],
     },
     {

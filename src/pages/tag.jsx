@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { notification, Table, Menu, Row, Col, Typography } from "antd";
-import { getTagApi } from "../utils/api";
+import { notification, Table, Menu, Row, Col, Typography, Button } from "antd";
+import { delTagApi, getTagApi } from "../utils/api";
 
 import MenuPage from "../components/layout/menu";
+import TagDeleteButton from "../components/layout/tag/deleteTag";
+import EditTagModal from "../components/layout/tag/editTag";
 
 const TagPage = () => {
     const [dataSource, setDataSource] = useState([]);
-
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currentTag, setCurrentTag] = useState(null);
     useEffect(() => {
         const fetchUser = async () => {
             const res = await getTagApi();
@@ -21,7 +24,25 @@ const TagPage = () => {
         };
         fetchUser();
     }, []);
+    const handleDelete = async (id) => {
+        try {
+            await delTagApi(id);
+            notification.success({ message: "User deleted successfully" });
+            setDataSource(prev => prev.filter(tag => tag._id !== id));
+        } catch (err) {
+            notification.error({ message: "Delete failed", description: err.message });
+        }
+    };
+    const handleEdit = (record) => {
+        setCurrentTag(record);
+        setIsModalOpen(true);
+    };
 
+    const handleUpdateTag = (updatedTag) => {
+        setDataSource(prev =>
+            prev.map(tag => tag._id === updatedTag._id ? updatedTag : tag)
+        );
+    };
     const columns = [
         {
             title: "Name",
@@ -40,6 +61,15 @@ const TagPage = () => {
             title: "Id",
             dataIndex: "_id",
         },
+        {
+            title: 'Action',
+            render: (_, record) => (
+                <div style={{ display: 'flex', gap: 8 }}>
+                    <Button type="default" onClick={() => handleEdit(record)}>Edit</Button>
+                    <TagDeleteButton tag={record} onDelete={handleDelete} />
+                </div>
+            ),
+        }
     ];
 
     const onClick = (e) => {
@@ -68,6 +98,12 @@ const TagPage = () => {
                     />
                 </Col>
             </Row>
+            <EditTagModal
+                visible={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                tag={currentTag}
+                onUpdate={handleUpdateTag}
+            />
         </div>
     );
 };
