@@ -34,55 +34,76 @@ const HomePage = () => {
             [tagId]: page
         }));
     };
+    const carouselImages = [
+        'https://api.mobifone.vn/images/banner/1744624612050_mobifone-32-years.jpg',
+        'https://api.mobifone.vn/images/banner/1728634466668_3.jpg',
+        'https://api.mobifone.vn/images/banner/1744624612050_mobifone-32-years.jpg',
+        'https://api.mobifone.vn/images/banner/1728634466668_3.jpg',
+    ];
 
     const renderCards = (listSystem = []) => {
         return listSystem.map((system) => (
             <Col key={system._id} span={6}>
-                <Card
-                    title={system.name}
-                    extra={
-                        <Popover content={(
-                            <div>
-                                <p>Mô tả: {system.description}</p>
-                                <p>Link truy cập: {system.linkAccess}</p>
-                                <p>Tài liệu tham khảo: {system.linkInstruct}</p>
-                                <p>Đơn vị liên lạc: {system.contactPoint}</p>
-                                <p>Đơn vị chủ quản: {system.managingUnit}</p>
-                            </div>
-                        )} title={system.name} trigger="hover">
-                            <a href="#">More</a>
-                        </Popover>
-                    }
-                    cover={
-                        <img
-                            alt="example"
-                            src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                        />
-                    }
-                    actions={[
-                        <SettingOutlined key="setting" />,
-                        <DoubleRightOutlined key="access" />
-                    ]}
+                <a
+                    href={system.linkAccess}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ textDecoration: 'none' }}
+
                 >
-                    <Meta
-                        avatar={<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />}
+                    <Card
+                        hoverable
                         title={system.name}
-                        description={system.description || "Không có mô tả"}
-                    />
-                </Card>
+                        extra={(
+                            <Popover content={(
+                                <div>
+                                    <p>Mô tả: {system.description}</p>
+                                    <p>Link truy cập: {system.linkAccess}</p>
+                                    <p>Tài liệu tham khảo: {system.linkInstruct}</p>
+                                    <p>Đơn vị liên lạc: {system.contactPoint}</p>
+                                    <p>Đơn vị chủ quản: {system.managingUnit}</p>
+                                </div>
+                            )} title={system.name} trigger="hover">
+                                <span style={{ color: '#1677ff' }}>More</span>
+                            </Popover>
+                        )}
+                        cover={
+                            <img
+                                alt="example"
+                                src="https://api.mobifone.vn/images/banner/1744624612050_mobifone-32-years.jpg"
+                                style={{ width: '100%', height: '220px', objectFit: 'cover' }}
+                            />
+                        }
+                    // actions={[
+                    //     <SettingOutlined key="setting" />,
+                    //     <DoubleRightOutlined key="access" />
+                    // ]}
+                    >
+                        <Meta
+                            avatar={<Avatar src="https://ppclink.com/wp-content/uploads/2021/12/icon_MyMobiFone.png" />}
+                            title={system.name}
+                            description={system.description || "Không có mô tả"}
+                        />
+                    </Card>
+                </a>
             </Col>
         ));
     };
 
+
     return (
         <>
             <Carousel autoplay>
-                <div><h3>1</h3></div>
-                <div><h3>2</h3></div>
-                <div><h3>3</h3></div>
-                <div><h3>4</h3></div>
+                {carouselImages.map((src, idx) => (
+                    <div key={idx}>
+                        <img
+                            src={src}
+                            alt={`slide-${idx}`}
+                            className="carousel-image"
+                        />
+                    </div>
+                ))}
             </Carousel>
-
             {tagList.map((tag) => {
                 const currentPage = pageMap[tag._id] || 1;
                 const listSystem = tag.listSystem || [];
@@ -91,7 +112,7 @@ const HomePage = () => {
 
                 return (
                     <React.Fragment key={tag._id}>
-                        <div style={{ marginTop: 40 }}>
+                        <div style={{ marginTop: 40, margin: 20 }}>
                             <Title level={3}>{tag.name}</Title>
 
                             {total > 0 ? (

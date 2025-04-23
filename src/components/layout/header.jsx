@@ -11,6 +11,18 @@ const Header = () => {
     console.log(">>>Check auth:", auth)
     const items = [
         {
+            label: (
+                <Link to="/">
+                    <img
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/MobiFone_logo.svg/768px-MobiFone_logo.svg.png"
+                        alt="Logo"
+                        style={{ height: '32px', verticalAlign: 'middle' }}
+                    />
+                </Link>
+            ),
+            key: 'logo',
+        },
+        {
             label: <Link to={'/'}>Home page</Link>,
             key: 'home',
             icon: <HomeOutlined />,
@@ -67,5 +79,12 @@ const Header = () => {
         setCurrent(e.key);
     };
     return <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} />;
+    return (
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items.filter(item => item.key !== 'SubMenu')} />
+        <Menu mode="horizontal" selectedKeys={[]} items={[items.find(item => item.key === 'SubMenu')]} />
+    </div>
+);
+
 };
 export default Header;
