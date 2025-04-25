@@ -82,7 +82,15 @@ const HomePage = () => {
                         <Meta
                             avatar={<Avatar src="https://ppclink.com/wp-content/uploads/2021/12/icon_MyMobiFone.png" />}
                             title={system.name}
-                            description={system.description || "Không có mô tả"}
+                            description={
+                                <div style={{
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis'
+                                }}>
+                                    {system.description || "Không có mô tả"}
+                                </div>
+                            }
                         />
                     </Card>
                 </a>

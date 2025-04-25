@@ -68,6 +68,7 @@ const UserPage = () => {
         },
         {
             title: 'Action',
+            width: 200,
             render: (_, record) => (
                 <div style={{ display: 'flex', gap: 8 }}>
                     <Button type="default" onClick={() => handleEdit(record)}>Edit</Button>
