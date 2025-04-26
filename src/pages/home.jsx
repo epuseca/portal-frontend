@@ -1,7 +1,15 @@
-import { DoubleRightOutlined, EditOutlined, EllipsisOutlined, SettingOutlined } from "@ant-design/icons"
-import { Avatar, Card, List, Carousel, Row, Col, Button, Pagination, Typography, Popover, Empty } from 'antd';
+import {
+    DoubleRightOutlined,
+    EditOutlined,
+    EllipsisOutlined,
+    FilterOutlined,
+    SettingOutlined
+} from "@ant-design/icons";
+import {
+    Avatar, Card, List, Carousel, Row, Col, Button, Pagination, Typography, Popover, Empty, Form, Select, Input
+} from 'antd';
 import React, { useEffect, useState } from "react";
-import '../styles/home/slideShow.css'; // Nếu tách CSS
+import '../styles/home/slideShow.css';
 import { getTagApiHome } from "../utils/api";
 
 const { Title } = Typography;
@@ -9,15 +17,15 @@ const { Meta } = Card;
 
 const HomePage = () => {
     const [tagList, setTagList] = useState([]);
-    const [pageMap, setPageMap] = useState({}); // lưu page cho từng tag._id
-
+    const [pageMap, setPageMap] = useState({});
+    const [filteredTagIds, setFilteredTagIds] = useState([]);
+    const [searchKeyword, setSearchKeyword] = useState('');
     const pageSize = 4;
 
     useEffect(() => {
         const fetchTags = async () => {
             try {
                 const res = await getTagApiHome();
-                console.log("response: ", res)
                 if (!res?.message) {
                     setTagList(res);
                 }
@@ -34,6 +42,7 @@ const HomePage = () => {
             [tagId]: page
         }));
     };
+
     const carouselImages = [
         'https://api.mobifone.vn/images/banner/1744624612050_mobifone-32-years.jpg',
         'https://api.mobifone.vn/images/banner/1728634466668_3.jpg',
@@ -49,7 +58,6 @@ const HomePage = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{ textDecoration: 'none' }}
-
                 >
                     <Card
                         hoverable
@@ -74,15 +82,11 @@ const HomePage = () => {
                                 style={{ width: '100%', height: '220px', objectFit: 'cover' }}
                             />
                         }
-                    // actions={[
-                    //     <SettingOutlined key="setting" />,
-                    //     <DoubleRightOutlined key="access" />
-                    // ]}
                     >
                         <Meta
                             avatar={<Avatar src="https://ppclink.com/wp-content/uploads/2021/12/icon_MyMobiFone.png" />}
                             title={system.name}
-                            description={
+                            description={(
                                 <div style={{
                                     whiteSpace: 'nowrap',
                                     overflow: 'hidden',
@@ -90,7 +94,7 @@ const HomePage = () => {
                                 }}>
                                     {system.description || "Không có mô tả"}
                                 </div>
-                            }
+                            )}
                         />
                     </Card>
                 </a>
@@ -98,9 +102,15 @@ const HomePage = () => {
         ));
     };
 
+    // Bộ lọc tag
+    const filteredTags = filteredTagIds.length > 0
+        ? tagList.filter(tag => filteredTagIds.includes(tag._id))
+        : tagList;
 
     return (
         <>
+
+
             <Carousel autoplay>
                 {carouselImages.map((src, idx) => (
                     <div key={idx}>
@@ -112,9 +122,51 @@ const HomePage = () => {
                     </div>
                 ))}
             </Carousel>
-            {tagList.map((tag) => {
+            <Form
+                layout="inline"
+                style={{
+                    margin: '20px',
+                    display: 'flex',
+                    justifyContent: 'flex-end'
+                }}
+            >
+                <Form.Item>
+                    <Select
+                        mode="multiple"
+                        placeholder="Filter tag"
+                        allowClear
+                        style={{ width: 300 }}
+                        maxTagCount="responsive"
+                        options={tagList.map(tag => ({
+                            label: tag.name,
+                            value: tag._id
+                        }))}
+                        onChange={setFilteredTagIds}
+                    />
+                </Form.Item>
+                <Form.Item>
+                    <Input.Search
+                        placeholder="Search system"
+                        allowClear
+                        onSearch={(value) => setSearchKeyword(value.trim().toLowerCase())}
+                        style={{ width: 300 }}
+                    />
+                </Form.Item>
+            </Form>
+
+
+
+            {filteredTags.map((tag) => {
                 const currentPage = pageMap[tag._id] || 1;
-                const listSystem = tag.listSystem || [];
+                let listSystem = tag.listSystem || [];
+
+                // Thêm filter theo search keyword
+                if (searchKeyword) {
+                    listSystem = listSystem.filter(system =>
+                        system.name?.toLowerCase().includes(searchKeyword)
+                    );
+                }
+
                 const total = listSystem.length;
                 const paginated = listSystem.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
@@ -142,7 +194,7 @@ const HomePage = () => {
                                 </>
                             ) : (
                                 <div style={{ textAlign: 'center', width: '100%' }}>
-                                    <Empty description="Không có hệ thống nào trong tag này" />
+                                    <Empty description="Không có hệ thống nào phù hợp" />
                                 </div>
                             )}
                         </div>
