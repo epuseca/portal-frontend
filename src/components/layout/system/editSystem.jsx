@@ -7,9 +7,11 @@ const EditSystemModal = ({ visible, onClose, system, onUpdate }) => {
 
     useEffect(() => {
         if (system) {
-            form.setFieldsValue(system);
+            const { name, description, linkAccess, linkInstruct, managingUnit, contactPoint } = system;
+            form.setFieldsValue({ name, description, linkAccess, linkInstruct, managingUnit, contactPoint });
         }
     }, [system, form]);
+
 
     const handleSubmit = async () => {
         try {

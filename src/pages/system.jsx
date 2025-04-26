@@ -4,6 +4,7 @@ import { delSystemApi, getSystemApi } from "../utils/api";
 import MenuPage from "../components/layout/menu";
 import EditSystemModal from "../components/layout/system/editSystem";
 import SystemDeleteButton from "../components/layout/system/deleteSystem";
+import SystemImage from "../components/layout/system/systemImage";
 
 const SystemPage = () => {
     const [dataSource, setDataSource] = useState([])
@@ -44,6 +45,12 @@ const SystemPage = () => {
         );
     };
     const columns = [
+        {
+            title: 'Image',
+            dataIndex: 'image',
+            width: 100,
+            render: (_, record) => <SystemImage systemId={record._id} />
+        },
         {
             title: 'Name',
             dataIndex: 'name',

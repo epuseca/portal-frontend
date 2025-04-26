@@ -60,20 +60,24 @@ const updateSystemApi = (data) => {
 const delSystemApi = (id) => {
     return axios.delete(`/v1/api/system/${id}`);
 };
+const getSystemByIdApi = (id) => {
+    const URL_API = `/v1/api/system/${id}`;
+    return axios.get(URL_API);
+};
+
 const getImageSystemApi = async (id) => {
     const URL_API = `/v1/api/system/${id}/image`;
+    console.log("URL_API", URL_API)
     try {
         const response = await axios({
             method: 'get',
             url: URL_API,
             responseType: 'blob',
         });
+        if (response.size < 30) return;
+        console.log("response", response)
 
-        console.log("Response:", response.data); // Blob object
-        console.log("Data type", typeof response.data, response.data?.type); // blob, image/jpeg
-
-        // 👉 KHÔNG cần kiểm tra instanceof nữa
-        return URL.createObjectURL(response.data);
+        return URL.createObjectURL(response);
     } catch (error) {
         console.error("Lỗi lấy ảnh cho system", id, error.message);
         return null;
@@ -96,5 +100,6 @@ export {
     createSystemApi,
     updateSystemApi,
     delSystemApi,
+    getSystemByIdApi,
     getImageSystemApi
 }
