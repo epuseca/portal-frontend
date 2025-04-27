@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { notification, Table, Menu, Row, Col, Typography, Button, Popover } from "antd";
+import { notification, Table, Menu, Row, Col, Typography, Button, Popover, Input } from "antd";
 import { delTagApi, getTagApi } from "../utils/api";
 
 import MenuPage from "../components/layout/menu";
@@ -10,6 +10,7 @@ const TagPage = () => {
     const [dataSource, setDataSource] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentTag, setCurrentTag] = useState(null);
+    const [searchText, setSearchText] = useState(''); // Thêm searchText
     useEffect(() => {
         const fetchUser = async () => {
             const res = await getTagApi();
@@ -97,9 +98,13 @@ const TagPage = () => {
     const onClick = (e) => {
         console.log("Menu click ", e);
     };
+    const filteredData = dataSource.filter(tag =>
+        tag.name?.toLowerCase().includes(searchText.toLowerCase()) ||
+        tag.description?.toLowerCase().includes(searchText.toLowerCase())
+    );
 
     return (
-        <div >
+        <div>
             <Row gutter={0}>
                 <Col span={6}>
                     <MenuPage
@@ -109,17 +114,32 @@ const TagPage = () => {
                     />
                 </Col>
                 <Col span={18}>
-                    <Typography.Title level={3} style={{ marginBottom: 16, padding: 16 }}>
-                        Tag's list
-                    </Typography.Title>
+                    <Row justify="space-between" align="middle" style={{ marginBottom: 16, padding: 16 }}>
+                        <Col>
+                            <Typography.Title level={3} style={{ margin: 0 }}>
+                                Tag's list
+                            </Typography.Title>
+                        </Col>
+                        <Col>
+                            <Input.Search
+                                placeholder="Search tags..."
+                                allowClear
+                                onChange={(e) => setSearchText(e.target.value)}
+                                value={searchText}
+                                style={{ width: 300 }}
+                            />
+                        </Col>
+                    </Row>
+    
                     <Table
-                        dataSource={dataSource}
+                        dataSource={filteredData}
                         columns={columns}
                         rowKey="_id"
                         pagination={{ pageSize: 7 }}
                     />
                 </Col>
             </Row>
+    
             <EditTagModal
                 visible={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
@@ -128,6 +148,7 @@ const TagPage = () => {
             />
         </div>
     );
+    
 };
 
 export default TagPage;
