@@ -1,4 +1,4 @@
-import { Button, Col, notification, Row, Table, Typography } from "antd";
+import { Button, Col, Input, notification, Row, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { delUserApi, getUserApi } from "../utils/api";
 import MenuPage from "../components/layout/menu";
@@ -10,6 +10,8 @@ const UserPage = () => {
     const [dataSource, setDataSource] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
+    const [searchText, setSearchText] = useState(''); // Thêm searchText
+
     useEffect(() => {
         const fetchUser = async () => {
             const res = await getUserApi()
@@ -43,6 +45,7 @@ const UserPage = () => {
             prev.map(user => user._id === updatedUser._id ? updatedUser : user)
         );
     };
+
     const columns = [
         {
             title: 'Email',
@@ -81,7 +84,10 @@ const UserPage = () => {
     const onClick = (e) => {
         console.log("Menu click ", e);
     };
-
+    const filteredData = dataSource.filter(user =>
+        user.name?.toLowerCase().includes(searchText.toLowerCase()) ||
+        user.email?.toLowerCase().includes(searchText.toLowerCase())
+    );
     return (
         <div >
             <Row gutter={0} className="custom-layout">
@@ -93,11 +99,25 @@ const UserPage = () => {
                     />
                 </Col>
                 <Col span={18} className="custom-content">
-                    <Typography.Title level={3} style={{ marginBottom: 16, padding: 16 }}>
-                        User's list
-                    </Typography.Title>
+                    <Row justify="space-between" align="middle" style={{ marginBottom: 16, padding: 16 }}>
+                        <Col>
+                            <Typography.Title level={3} style={{ marginBottom: 16, padding: 16 }}>
+                                User's list
+                            </Typography.Title>
+                        </Col>
+                        <Col>
+                            <Input.Search
+                                placeholder="Search users..."
+                                allowClear
+                                onChange={(e) => setSearchText(e.target.value)}
+                                value={searchText}
+                                style={{ width: 300 }}
+                            />
+                        </Col>
+                    </Row>
+
                     <Table
-                        dataSource={dataSource}
+                        dataSource={filteredData}
                         columns={columns}
                         rowKey={"_id"}
                         pagination={{ pageSize: 7 }}

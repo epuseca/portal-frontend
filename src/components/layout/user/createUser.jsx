@@ -1,16 +1,15 @@
 import React from 'react';
-import { Button, Col, Divider, Form, Input, notification, Row, Typography } from 'antd';
+import { Button, Col, Divider, Form, Input, notification, Row, Select, Typography } from 'antd';
 import { createUserApi } from '../../../utils/api';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import MenuPage from '../menu';
-
 const CreateUser = () => {
     const navigate = useNavigate();
 
     const onFinish = async (values) => {
-        const { name, email, password } = values;
-        const res = await createUserApi(name, email, password);
+        const { name, email, password, role } = values;
+        const res = await createUserApi(name, email, password,role);
 
         if (res) {
             notification.success({
@@ -57,6 +56,21 @@ const CreateUser = () => {
                         rules={[{ required: true, message: 'Please input your name!' }]}
                     >
                         <Input />
+                    </Form.Item>
+                    <Form.Item
+                        label="Role"
+                        name="role"
+                        rules={[{ required: true, message: 'Please select a role!' }]}
+                    >
+                        <Select
+                            showSearch
+                            placeholder="Select a role"
+                            filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+                            options={[
+                                { value: 'Admin', label: 'Admin' },
+                                { value: 'Staff', label: 'Staff' },
+                            ]}
+                        />
                     </Form.Item>
                     <Form.Item>
                         <Button type="primary" htmlType="submit">Submit</Button>

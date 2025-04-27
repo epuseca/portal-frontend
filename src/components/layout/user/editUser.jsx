@@ -1,5 +1,5 @@
 // src/components/layout/user/EditUserModal.jsx
-import { Form, Input, Modal, notification } from "antd";
+import { Form, Input, Modal, notification, Select } from "antd";
 import { useEffect } from "react";
 import { updateUserApi } from "../../../utils/api";
 
@@ -48,7 +48,6 @@ const EditUserModal = ({ visible, onClose, user, onUpdate }) => {
                     label="Email"
                     rules={[
                         { required: true, message: "Please input email" },
-                        { type: "email", message: "Invalid email format" }
                     ]}
                 >
                     <Input />
@@ -56,9 +55,19 @@ const EditUserModal = ({ visible, onClose, user, onUpdate }) => {
                 <Form.Item
                     name="role"
                     label="Role"
-                    rules={[{ required: true, message: "Please input role" }]}
+                    rules={[{ required: true, message: "Please select a role" }]}
                 >
-                    <Input />
+                    <Select
+                        showSearch
+                        placeholder="Select a role"
+                        filterOption={(input, option) =>
+                            (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+                        }
+                        options={[
+                            { value: "Admin", label: "Admin" },
+                            { value: "Staff", label: "Staff" },
+                        ]}
+                    />
                 </Form.Item>
             </Form>
         </Modal>
