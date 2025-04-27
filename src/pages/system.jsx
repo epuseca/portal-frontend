@@ -147,6 +147,7 @@ const SystemPage = () => {
                         columns={columns}
                         rowKey={"_id"}
                         pagination={{ pageSize: 7 }}
+                        scroll={{ x: "100%" }}
                     />
                 </Col>
 

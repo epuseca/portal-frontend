@@ -130,16 +130,17 @@ const TagPage = () => {
                             />
                         </Col>
                     </Row>
-    
+
                     <Table
                         dataSource={filteredData}
                         columns={columns}
                         rowKey="_id"
                         pagination={{ pageSize: 7 }}
+                        scroll={{ x: "100%" }}
                     />
                 </Col>
             </Row>
-    
+
             <EditTagModal
                 visible={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
@@ -148,7 +149,7 @@ const TagPage = () => {
             />
         </div>
     );
-    
+
 };
 
 export default TagPage;

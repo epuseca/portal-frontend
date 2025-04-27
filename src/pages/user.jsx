@@ -56,7 +56,7 @@ const UserPage = () => {
         {
             title: 'Name',
             dataIndex: 'name',
-            width: 250,
+            width: 200,
             ellipsis: true,
         },
         // {
@@ -66,7 +66,7 @@ const UserPage = () => {
         {
             title: 'Role',
             dataIndex: 'role',
-            width: 250,
+            width: 150,
             ellipsis: true,
         },
         {
@@ -121,6 +121,7 @@ const UserPage = () => {
                         columns={columns}
                         rowKey={"_id"}
                         pagination={{ pageSize: 7 }}
+                        scroll={{ x: "100%" }}
                     />
                 </Col>
             </Row>
