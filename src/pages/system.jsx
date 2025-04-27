@@ -1,4 +1,4 @@
-import { Button, Col, notification, Row, Table, Typography } from "antd";
+import { Button, Col, Input, notification, Row, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { delSystemApi, getSystemApi } from "../utils/api";
 import MenuPage from "../components/layout/menu";
@@ -7,24 +7,27 @@ import SystemDeleteButton from "../components/layout/system/deleteSystem";
 import SystemImage from "../components/layout/system/systemImage";
 
 const SystemPage = () => {
-    const [dataSource, setDataSource] = useState([])
+    const [dataSource, setDataSource] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentSystem, setCurrentSystem] = useState(null);
+    const [searchText, setSearchText] = useState(''); // Thêm state searchText
+
     useEffect(() => {
         const fetchUser = async () => {
-            const res = await getSystemApi()
-            console.log("RES", res)
+            const res = await getSystemApi();
+            console.log("RES", res);
             if (!res?.message) {
-                setDataSource(res)
+                setDataSource(res);
             } else {
                 notification.error({
                     message: "Unauthorized",
                     description: res.message
-                })
+                });
             }
-        }
+        };
         fetchUser();
-    }, [])
+    }, []);
+
     const handleDelete = async (id) => {
         try {
             await delSystemApi(id);
@@ -34,6 +37,7 @@ const SystemPage = () => {
             notification.error({ message: "Delete failed", description: err.message });
         }
     };
+
     const handleEdit = (record) => {
         setCurrentSystem(record);
         setIsModalOpen(true);
@@ -44,6 +48,7 @@ const SystemPage = () => {
             prev.map(system => system._id === updatedSystem._id ? updatedSystem : system)
         );
     };
+
     const columns = [
         {
             title: 'Image',
@@ -87,12 +92,6 @@ const SystemPage = () => {
             width: 120,
             ellipsis: true,
         },
-        // {
-        //     title: 'Id',
-        //     dataIndex: '_id',
-        //     width: 120,
-        //     ellipsis: true,
-        // },
         {
             title: 'Action',
             width: 200,
@@ -104,13 +103,20 @@ const SystemPage = () => {
             ),
         }
     ];
-    
+
     const onClick = (e) => {
         console.log("Menu click ", e);
     };
 
+    const filteredData = dataSource.filter(system =>
+        system.name?.toLowerCase().includes(searchText.toLowerCase()) ||
+        system.description?.toLowerCase().includes(searchText.toLowerCase()) ||
+        system.managingUnit?.toLowerCase().includes(searchText.toLowerCase()) ||
+        system.contactPoint?.toLowerCase().includes(searchText.toLowerCase())
+    );
+
     return (
-        <div >
+        <div>
             <Row gutter={0}>
                 <Col span={6}>
                     <MenuPage
@@ -119,17 +125,31 @@ const SystemPage = () => {
                         defaultOpenKeys={["sub3"]}
                     />
                 </Col>
-                <Col span={18} >
-                    <Typography.Title level={3} style={{ marginBottom: 16 , padding: 16}}>
-                        System's list
-                    </Typography.Title>
+                <Col span={18}>
+                    <Row justify="space-between" align="middle" style={{ marginBottom: 16, padding: 16 }}>
+                        <Col>
+                            <Typography.Title level={3} style={{ margin: 0 }}>
+                                System's list
+                            </Typography.Title>
+                        </Col>
+                        <Col>
+                            <Input.Search
+                                placeholder="Search systems..."
+                                allowClear
+                                onChange={(e) => setSearchText(e.target.value)}
+                                value={searchText}
+                                style={{ width: 300 }}
+                            />
+                        </Col>
+                    </Row>
                     <Table
-                        dataSource={dataSource}
+                        dataSource={filteredData}
                         columns={columns}
                         rowKey={"_id"}
                         pagination={{ pageSize: 7 }}
                     />
                 </Col>
+
             </Row>
             <EditSystemModal
                 visible={isModalOpen}
@@ -138,6 +158,7 @@ const SystemPage = () => {
                 onUpdate={handleUpdateSystem}
             />
         </div>
-    )
-}
-export default SystemPage
+    );
+};
+
+export default SystemPage;
