@@ -67,7 +67,6 @@ const getSystemByIdApi = (id) => {
 
 const getImageSystemApi = async (id) => {
     const URL_API = `/v1/api/system/${id}/image`;
-    console.log("URL_API", URL_API)
     try {
         const response = await axios({
             method: 'get',
@@ -75,7 +74,6 @@ const getImageSystemApi = async (id) => {
             responseType: 'blob',
         });
         if (response.size < 30) return;
-        console.log("response", response)
 
         return URL.createObjectURL(response);
     } catch (error) {
@@ -83,6 +81,48 @@ const getImageSystemApi = async (id) => {
         return null;
     }
 };
+const createSystemApiWithImage = async (systemData, imageFile) => {
+    try {
+        const createRes = await axios.post('/v1/api/system', systemData);
+        console.log('createRes', createRes)
+        if (!createRes?._id) {
+            throw new Error("Failed to create system");
+        }
+        if (imageFile) {
+            const formData = new FormData();
+            formData.append('image', imageFile);
+            await axios.post(`/v1/api/system/${createRes._id}/upload-image`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+        }
+        return createRes; // return created system if success
+    } catch (error) {
+        console.error("createSystemApiWithImage error:", error);
+        return null;
+    }
+}
+const editSystemApiWithImage = async (systemData, imageFile) => {
+    try {
+        console.log('systemData', systemData)
+        const updateRes = await axios.put(`/v1/api/system/${systemData.id}`, systemData);
+        if (imageFile) {
+            const formData = new FormData();
+            formData.append('image', imageFile);
+
+            await axios.post(`/v1/api/system/${systemData.id}/upload-image`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+        }
+        return updateRes;
+    } catch (error) {
+        console.error("editSystemApiWithImage error:", error);
+        return null;
+    }
+}
 
 
 export {
@@ -101,5 +141,7 @@ export {
     updateSystemApi,
     delSystemApi,
     getSystemByIdApi,
-    getImageSystemApi
+    getImageSystemApi,
+    createSystemApiWithImage,
+    editSystemApiWithImage
 }

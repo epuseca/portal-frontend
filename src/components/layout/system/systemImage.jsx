@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { getSystemByIdApi } from "../../../utils/api"; // đúng path
 import { getImageSystemApi } from "../../../utils/api";
 
-const SystemImage = ({ systemId }) => {
+const SystemImage = ({ systemId, style }) => {
     const [imageUrl, setImageUrl] = useState(null);
     const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         const fetchSystem = async () => {
             try {
@@ -24,10 +25,12 @@ const SystemImage = ({ systemId }) => {
         };
         fetchSystem();
     }, [systemId]);
+
     if (loading) return <div>Loading...</div>;
     if (!imageUrl) {
         return <div>No image...</div>;
     }
+
     return (
         <img
             src={imageUrl}
@@ -36,10 +39,12 @@ const SystemImage = ({ systemId }) => {
                 width: '50px',
                 height: '50px',
                 objectFit: 'cover',
-                borderRadius: '4px'
+                borderRadius: '4px',
+                ...(style || {}), // <- merge thêm custom style
             }}
         />
     );
 };
 
 export default SystemImage;
+

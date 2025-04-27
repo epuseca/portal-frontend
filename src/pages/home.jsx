@@ -11,6 +11,7 @@ import {
 import React, { useEffect, useState } from "react";
 import '../styles/home/slideShow.css';
 import { getTagApiHome } from "../utils/api";
+import SystemImage from "../components/layout/system/systemImage";
 
 const { Title } = Typography;
 const { Meta } = Card;
@@ -76,11 +77,16 @@ const HomePage = () => {
                             </Popover>
                         )}
                         cover={
-                            <img
-                                alt="example"
-                                src="https://api.mobifone.vn/images/banner/1744624612050_mobifone-32-years.jpg"
-                                style={{ width: '100%', height: '220px', objectFit: 'cover' }}
-                            />
+                            system.image ?
+                                (<SystemImage
+                                    systemId={system._id}
+                                    style={{ width: '100%', height: '220px', objectFit: 'cover' }}
+                                />) :
+                                (<img
+                                    alt="default"
+                                    src="https://api.mobifone.vn/images/banner/1744624612050_mobifone-32-years.jpg"
+                                    style={{ width: '100%', height: '220px', objectFit: 'cover' }}
+                                />)
                         }
                     >
                         <Meta
