@@ -1,12 +1,38 @@
 import React, { useState } from 'react';
-import { Button, Col, Divider, Form, Input, notification, Row, Typography, Upload } from 'antd';
-import { createSystemApiWithImage } from '../../../utils/api';
+import {
+    Button,
+    Col,
+    Divider,
+    Form,
+    Image,
+    Input,
+    notification,
+    Row,
+    Typography,
+    Upload,
+} from 'antd';
+import {
+    ArrowLeftOutlined,
+    PlusOutlined,
+} from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeftOutlined, UploadOutlined } from '@ant-design/icons';
 import MenuPage from '../menu';
+import { createSystemApiWithImage } from '../../../utils/api';
+
+const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+    });
 
 const CreateSystem = () => {
     const [file, setFile] = useState(null);
+    const [fileList, setFileList] = useState([]);
+    const [previewOpen, setPreviewOpen] = useState(false);
+    const [previewImage, setPreviewImage] = useState('');
+
     const navigate = useNavigate();
 
     const onFinish = async (values) => {
@@ -15,24 +41,37 @@ const CreateSystem = () => {
         if (res) {
             notification.success({
                 message: "CREATE SYSTEM",
-                description: "Success"
+                description: "Success",
             });
             navigate("/system");
         } else {
             notification.error({
                 message: "CREATE SYSTEM",
-                description: "Error"
+                description: "Error",
             });
         }
     };
 
-    const propsUpload = {
-        beforeUpload: (file) => {
-            setFile(file); // save file to state
-            return false; // prevent auto upload by Upload component
-        },
-        maxCount: 1,
+    const handlePreview = async (file) => {
+        if (!file.url && !file.preview) {
+            file.preview = await getBase64(file.originFileObj);
+        }
+        setPreviewImage(file.url || file.preview);
+        setPreviewOpen(true);
     };
+
+    const handleChange = ({ fileList: newFileList }) => {
+        const latestFileList = newFileList.slice(-1); // chỉ giữ 1 ảnh
+        setFileList(latestFileList);
+        setFile(latestFileList[0]?.originFileObj || null);
+    };
+
+    const uploadButton = (
+        <div>
+            <PlusOutlined />
+            <div style={{ marginTop: 8 }}>Upload</div>
+        </div>
+    );
 
     return (
         <Row gutter={0}>
@@ -54,7 +93,7 @@ const CreateSystem = () => {
                     </Form.Item>
 
                     <Form.Item label="Description" name="description">
-                        <Input/>
+                        <Input />
                     </Form.Item>
 
                     <Form.Item label="Link Access" name="linkAccess">
@@ -74,9 +113,31 @@ const CreateSystem = () => {
                     </Form.Item>
 
                     <Form.Item label="Upload Image">
-                        <Upload {...propsUpload} showUploadList={{ showRemoveIcon: true }}>
-                            <Button icon={<UploadOutlined />}>Select Image</Button>
+                        <Upload
+                            listType="picture-card"
+                            fileList={fileList}
+                            onPreview={handlePreview}
+                            onChange={handleChange}
+                            beforeUpload={(file) => {
+                                setFile(file);
+                                return false; // prevent auto upload
+                            }}
+                            maxCount={1}
+                        >
+                            {fileList.length >= 1 ? null : uploadButton}
                         </Upload>
+
+                        {previewImage && (
+                            <Image
+                                wrapperStyle={{ display: 'none' }}
+                                preview={{
+                                    visible: previewOpen,
+                                    onVisibleChange: (visible) => setPreviewOpen(visible),
+                                    afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                                }}
+                                src={previewImage}
+                            />
+                        )}
                     </Form.Item>
 
                     <Form.Item>

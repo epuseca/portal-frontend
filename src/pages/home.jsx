@@ -6,7 +6,7 @@ import {
     SettingOutlined
 } from "@ant-design/icons";
 import {
-    Avatar, Card, List, Carousel, Row, Col, Button, Pagination, Typography, Popover, Empty, Form, Select, Input
+    Avatar, Card, List, Carousel, Row, Col, Button, Pagination, Typography, Popover, Empty, Form, Select, Input, BackTop 
 } from 'antd';
 import React, { useEffect, useState } from "react";
 import '../styles/home/slideShow.css';
@@ -207,6 +207,7 @@ const HomePage = () => {
                     </React.Fragment>
                 );
             })}
+            <BackTop />
         </>
     );
 };

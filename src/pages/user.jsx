@@ -101,7 +101,7 @@ const UserPage = () => {
                 <Col span={18} className="custom-content">
                     <Row justify="space-between" align="middle" style={{ marginBottom: 16, padding: 16 }}>
                         <Col>
-                            <Typography.Title level={3} style={{ marginBottom: 16, padding: 16 }}>
+                            <Typography.Title level={3} style={{ margin: 0 }}>
                                 User's list
                             </Typography.Title>
                         </Col>

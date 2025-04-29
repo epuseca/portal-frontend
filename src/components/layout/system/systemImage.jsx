@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getSystemByIdApi } from "../../../utils/api"; // đúng path
-import { getImageSystemApi } from "../../../utils/api";
+import { getSystemByIdApi, getImageSystemApi } from "../../../utils/api";
+import { Spin } from "antd"; // <- nếu bạn đã dùng Ant Design rồi
 
 const SystemImage = ({ systemId, style }) => {
     const [imageUrl, setImageUrl] = useState(null);
@@ -26,25 +26,40 @@ const SystemImage = ({ systemId, style }) => {
         fetchSystem();
     }, [systemId]);
 
-    if (loading) return <div>Loading...</div>;
-    if (!imageUrl) {
-        return <div>No image...</div>;
+    const imageStyle = {
+        width: '50px',
+        height: '50px',
+        objectFit: 'cover',
+        borderRadius: '4px',
+        backgroundColor: '#fff', // màu trắng nền khi loading
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        ...(style || {}),
+    };
+
+    if (loading) {
+        return (
+            <div style={imageStyle}>
+                <Spin size="small" />
+            </div>
+        );
     }
+
+    if (!imageUrl) {
+        return (
+            <div style={imageStyle}></div>
+        );
+    }
+    
 
     return (
         <img
             src={imageUrl}
             alt="system"
-            style={{
-                width: '50px',
-                height: '50px',
-                objectFit: 'cover',
-                borderRadius: '4px',
-                ...(style || {}), // <- merge thêm custom style
-            }}
+            style={imageStyle}
         />
     );
 };
 
 export default SystemImage;
-
