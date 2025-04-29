@@ -1,18 +1,33 @@
-import { Form, Input, Modal, notification, Upload, Button } from "antd";
+// src/pages/system/EditSystemModal.jsx
+import { Form, Input, Modal, notification } from "antd";
 import { useEffect, useState } from "react";
-import { editSystemApiWithImage } from "../../../utils/api"; // Import cái mới
-
-import { UploadOutlined } from '@ant-design/icons'; // Thêm icon upload
+import { editSystemApiWithImage, uploadSystemDocumentApi } from "../../../utils/api";
+import UploadImageAndDocument from '../system/uploadFileImageDoc';
 
 const EditSystemModal = ({ visible, onClose, system, onUpdate }) => {
     const [form] = Form.useForm();
     const [file, setFile] = useState(null);
+    const [fileList, setFileList] = useState([]);
+    const [documentFile, setDocumentFile] = useState(null);
 
     useEffect(() => {
         if (system) {
-            const { name, description, linkAccess, linkInstruct, managingUnit, contactPoint } = system;
-            form.setFieldsValue({ name, description, linkAccess, linkInstruct, managingUnit, contactPoint });
-            setFile(null); // Reset file mỗi lần mở modal mới
+            const { name, description, linkAccess, managingUnit, contactPoint } = system;
+            form.setFieldsValue({ name, description, linkAccess, managingUnit, contactPoint });
+            if (system.imageSystem) {
+                setFileList([
+                    {
+                        uid: '-1',
+                        name: 'image.png',
+                        status: 'done',
+                        url: system.imageSystem,
+                    }
+                ]);
+            } else {
+                setFileList([]);
+            }
+            setFile(null);
+            setDocumentFile(null);
         }
     }, [system, form]);
 
@@ -20,9 +35,12 @@ const EditSystemModal = ({ visible, onClose, system, onUpdate }) => {
         try {
             const values = await form.validateFields();
             const payload = { ...values, id: system._id };
-            console.log("Payload:", payload, "Image File:", file);
             const res = await editSystemApiWithImage(payload, file);
+
             if (res) {
+                if (documentFile) {
+                    await uploadSystemDocumentApi(res._id, documentFile);
+                }
                 notification.success({ message: "System updated successfully" });
                 onUpdate(res);
                 onClose();
@@ -32,14 +50,6 @@ const EditSystemModal = ({ visible, onClose, system, onUpdate }) => {
         } catch (err) {
             notification.error({ message: "Update failed", description: err.message });
         }
-    };
-
-    const propsUpload = {
-        beforeUpload: (file) => {
-            setFile(file);
-            return false; // Không auto upload
-        },
-        maxCount: 1,
     };
 
     return (
@@ -60,47 +70,29 @@ const EditSystemModal = ({ visible, onClose, system, onUpdate }) => {
                 >
                     <Input />
                 </Form.Item>
-                <Form.Item label="Upload New Image">
-                    <Upload {...propsUpload} showUploadList={{ showRemoveIcon: true }}>
-                        <Button icon={<UploadOutlined />}>Select Image</Button>
-                    </Upload>
+
+                <Form.Item >
+                    <UploadImageAndDocument
+                        fileList={fileList}
+                        setFileList={setFileList}
+                        setImageFile={setFile}
+                        documentFile={documentFile}
+                        setDocumentFile={setDocumentFile}
+                    />
                 </Form.Item>
-                <Form.Item
-                    name="description"
-                    label="Description"
-                >
+
+                <Form.Item name="description" label="Description">
                     <Input />
                 </Form.Item>
-                <Form.Item
-                    name="linkAccess"
-                    label="Link Access"
-                >
+                <Form.Item name="linkAccess" label="Link Access">
                     <Input placeholder="https://..." />
                 </Form.Item>
-
-                <Form.Item
-                    name="linkInstruct"
-                    label="Link Instruct"
-                >
-                    <Input placeholder="https://..." />
-                </Form.Item>
-
-                <Form.Item
-                    name="managingUnit"
-                    label="Managing Unit"
-                >
+                <Form.Item name="managingUnit" label="Managing Unit">
                     <Input />
                 </Form.Item>
-
-                <Form.Item
-                    name="contactPoint"
-                    label="Contact Point"
-                >
+                <Form.Item name="contactPoint" label="Contact Point">
                     <Input />
                 </Form.Item>
-
-
-
             </Form>
         </Modal>
     );

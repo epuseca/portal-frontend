@@ -6,12 +6,13 @@ import {
     SettingOutlined
 } from "@ant-design/icons";
 import {
-    Avatar, Card, List, Carousel, Row, Col, Button, Pagination, Typography, Popover, Empty, Form, Select, Input, BackTop 
+    Avatar, Card, List, Carousel, Row, Col, Button, Pagination, Typography, Popover, Empty, Form, Select, Input, BackTop
 } from 'antd';
 import React, { useEffect, useState } from "react";
 import '../styles/home/slideShow.css';
 import { getTagApiHome } from "../utils/api";
 import SystemImage from "../components/layout/system/systemImage";
+import DownloadButton from "../components/layout/system/downloadDoc";
 
 const { Title } = Typography;
 const { Meta } = Card;
@@ -65,10 +66,11 @@ const HomePage = () => {
                         title={system.name}
                         extra={(
                             <Popover content={(
-                                <div>
+                                <div style={{ maxWidth: 350, whiteSpace: 'normal', wordBreak: 'break-word' }}>
                                     <p>Mô tả: {system.description}</p>
                                     <p>Link truy cập: {system.linkAccess}</p>
-                                    <p>Tài liệu tham khảo: {system.linkInstruct}</p>
+                                    <p>Tài liệu tham khảo: <DownloadButton system={system} />
+                                    </p>
                                     <p>Đơn vị liên lạc: {system.contactPoint}</p>
                                     <p>Đơn vị chủ quản: {system.managingUnit}</p>
                                 </div>

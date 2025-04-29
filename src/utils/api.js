@@ -49,9 +49,9 @@ const getSystemApi = () => {
     const URL_API = "/v1/api/system"
     return axios.get(URL_API)
 }
-const createSystemApi = (name, description, linkAccess, linkInstruct, managingUnit, contactPoint) => {
+const createSystemApi = (name, description, linkAccess, managingUnit, contactPoint) => {
     const URL_API = "/v1/api/system";
-    const data = { name, description, linkAccess, linkInstruct, managingUnit, contactPoint }
+    const data = { name, description, linkAccess,  managingUnit, contactPoint }
     return axios.post(URL_API, data)
 }
 const updateSystemApi = (data) => {
@@ -124,7 +124,37 @@ const editSystemApiWithImage = async (systemData, imageFile) => {
         return null;
     }
 }
+const uploadSystemDocumentApi = async (systemId, documentFile) => {
+    const formData = new FormData();
+    formData.append('document', documentFile);
 
+    try {
+        const res = await axios.post(`/v1/api/system/${systemId}/upload-document`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        return res.data;
+    } catch (error) {
+        console.error("uploadSystemDocumentApi error:", error);
+        return null;
+    }
+};
+
+const downloadSystemDocumentApi = async (systemId) => {
+    try {
+        const response = await axios({
+            method: 'get',
+            url: `/v1/api/system/${systemId}/document`,
+            responseType: 'blob',
+        });
+        console.log('response', response)
+        return response;
+    } catch (error) {
+        console.error("downloadSystemDocumentApi error:", error);
+        return null;
+    }
+};
 
 export {
     createUserApi,
@@ -144,5 +174,7 @@ export {
     getSystemByIdApi,
     getImageSystemApi,
     createSystemApiWithImage,
-    editSystemApiWithImage
+    editSystemApiWithImage,
+    uploadSystemDocumentApi,
+    downloadSystemDocumentApi,
 }

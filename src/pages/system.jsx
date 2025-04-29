@@ -1,10 +1,11 @@
 import { Button, Col, Input, notification, Row, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
-import { delSystemApi, getSystemApi } from "../utils/api";
+import { delSystemApi, downloadSystemDocumentApi, getSystemApi } from "../utils/api";
 import MenuPage from "../components/layout/menu";
 import EditSystemModal from "../components/layout/system/editSystem";
 import SystemDeleteButton from "../components/layout/system/deleteSystem";
 import SystemImage from "../components/layout/system/systemImage";
+import DownloadButton from "../components/layout/system/downloadDoc";
 
 const SystemPage = () => {
     const [dataSource, setDataSource] = useState([]);
@@ -75,10 +76,12 @@ const SystemPage = () => {
             ellipsis: true,
         },
         {
-            title: 'Link Instruct',
-            dataIndex: 'linkInstruct',
+            title: 'Document',
+            dataIndex: 'document',
             width: 120,
-            ellipsis: true,
+            render: (_, record) => (
+                <DownloadButton system={record} />
+            )
         },
         {
             title: 'Managing Unit',
