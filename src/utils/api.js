@@ -156,6 +156,19 @@ const downloadSystemDocumentApi = async (systemId) => {
         return null;
     }
 };
+const addTagToSystemApi = async (systemId, tagId) => {
+    try {
+        const res = await axios.post(`/v1/api/system/add-tag`, {
+            systemId, // string
+            tagId     // string
+        });
+        return res;
+    } catch (error) {
+        console.error("addTagToSystemApi error:", error);
+        return null;
+    }
+};
+
 
 export {
     createUserApi,
@@ -178,4 +191,5 @@ export {
     editSystemApiWithImage,
     uploadSystemDocumentApi,
     downloadSystemDocumentApi,
+    addTagToSystemApi,
 }
