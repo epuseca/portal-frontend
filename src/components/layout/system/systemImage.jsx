@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getSystemByIdApi, getImageSystemApi } from "../../../utils/api";
 import { Spin } from "antd"; // <- nếu bạn đã dùng Ant Design rồi
 
-const SystemImage = ({ systemId, style }) => {
+const SystemImage = ({ systemId,reloadKey, style }) => {
     const [imageUrl, setImageUrl] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -24,7 +24,7 @@ const SystemImage = ({ systemId, style }) => {
             }
         };
         fetchSystem();
-    }, [systemId]);
+    }, [systemId, reloadKey]);
 
     const imageStyle = {
         width: '50px',

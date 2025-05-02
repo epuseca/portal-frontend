@@ -108,17 +108,18 @@ const editSystemApiWithImage = async (systemData, imageFile) => {
     try {
         console.log('systemData', systemData)
         const updateRes = await axios.put(`/v1/api/system/${systemData.id}`, systemData);
+        let updateImgRes = null;
         if (imageFile) {
             const formData = new FormData();
             formData.append('image', imageFile);
 
-            await axios.post(`/v1/api/system/${systemData.id}/upload-image`, formData, {
+            updateImgRes = await axios.post(`/v1/api/system/${systemData.id}/upload-image`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             });
         }
-        return updateRes;
+        return updateImgRes ? updateImgRes.system : updateRes;
     } catch (error) {
         console.error("editSystemApiWithImage error:", error);
         return null;
@@ -134,7 +135,7 @@ const uploadSystemDocumentApi = async (systemId, documentFile) => {
                 'Content-Type': 'multipart/form-data'
             }
         });
-        return res.data;
+        return res.system;
     } catch (error) {
         console.error("uploadSystemDocumentApi error:", error);
         return null;

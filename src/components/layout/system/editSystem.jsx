@@ -35,14 +35,17 @@ const EditSystemModal = ({ visible, onClose, system, onUpdate }) => {
         try {
             const values = await form.validateFields();
             const payload = { ...values, id: system._id };
-            const res = await editSystemApiWithImage(payload, file);
-
+            let res = await editSystemApiWithImage(payload, file);
             if (res) {
                 if (documentFile) {
-                    await uploadSystemDocumentApi(res._id, documentFile);
+                    const uploadResult = await uploadSystemDocumentApi(res._id, documentFile);
+                    // Giả sử uploadResult chứa thông tin file mới
+                    if (uploadResult && uploadResult.document) {
+                        res = { ...res, document: uploadResult.document };
+                    }
                 }
                 notification.success({ message: "System updated successfully" });
-                onUpdate(res);
+                onUpdate(res); // Gửi đầy đủ thông tin đã có document mới
                 onClose();
             } else {
                 notification.error({ message: "Update failed", description: "Error during update" });

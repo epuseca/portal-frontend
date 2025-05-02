@@ -12,6 +12,7 @@ const SystemPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentSystem, setCurrentSystem] = useState(null);
     const [searchText, setSearchText] = useState(''); // Thêm state searchText
+    const [imageReloadKey, setImageReloadKey] = useState(Date.now());
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -48,6 +49,7 @@ const SystemPage = () => {
         setDataSource(prev =>
             prev.map(system => system._id === updatedSystem._id ? updatedSystem : system)
         );
+        setImageReloadKey(Date.now());
     };
 
     const columns = [
@@ -55,7 +57,7 @@ const SystemPage = () => {
             title: 'Image',
             dataIndex: 'image',
             width: 100,
-            render: (_, record) => <SystemImage systemId={record._id} />
+            render: (_, record) => <SystemImage systemId={record._id} reloadKey={imageReloadKey} />
         },
         {
             title: 'Name',
