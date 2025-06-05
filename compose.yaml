@@ -7,12 +7,12 @@ services:
       dockerfile: Dockerfile
     container_name: jwt-frontend
     ports:
-      - "5173:5173"
+      - "0.0.0.0:5173:5173"
     volumes:
       - .:/app
       - /app/node_modules
     environment:
-      - VITE_BACKEND_URL=http://localhost:8080
+      - VITE_BACKEND_URL=http://10.5.1.59:8080
     restart: always
 
 #docker compose down; docker compose build; docker compose up -d

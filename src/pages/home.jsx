@@ -6,7 +6,7 @@ import {
     SettingOutlined
 } from "@ant-design/icons";
 import {
-    Avatar, Card, List, Carousel, Row, Col, Button, Pagination, Typography, Popover, Empty, Form, Select, Input, BackTop
+    Avatar, Card, List, Carousel, Row, Col, Button, Pagination, Typography, Popover, Empty, Form, Select, Input, BackTop, Divider
 } from 'antd';
 import React, { useEffect, useState } from "react";
 import '../styles/home/slideShow.css';
@@ -22,7 +22,7 @@ const HomePage = () => {
     const [pageMap, setPageMap] = useState({});
     const [filteredTagIds, setFilteredTagIds] = useState([]);
     const [searchKeyword, setSearchKeyword] = useState('');
-    const pageSize = 4;
+    const pageSize = 8;
 
     useEffect(() => {
         const fetchTags = async () => {
@@ -54,7 +54,7 @@ const HomePage = () => {
 
     const renderCards = (listSystem = []) => {
         return listSystem.map((system) => (
-            <Col key={system._id} span={6}>
+            <Col key={system._id} span={3}>
                 <a
                     href={system.linkAccess}
                     target="_blank"
@@ -63,37 +63,48 @@ const HomePage = () => {
                 >
                     <Card
                         hoverable
-                        title={system.name}
-                        extra={(
-                            <Popover content={(
-                                <div style={{ maxWidth: 350, whiteSpace: 'normal', wordBreak: 'break-word' }}>
-                                    <p>Mô tả: {system.description}</p>
-                                    <p>Link truy cập: {system.linkAccess}</p>
-                                    <p>Tài liệu tham khảo: <DownloadButton system={system} />
-                                    </p>
-                                    <p>Đơn vị liên lạc: {system.contactPoint}</p>
-                                    <p>Đơn vị chủ quản: {system.managingUnit}</p>
-                                </div>
-                            )} title={system.name} trigger="hover">
-                                <span style={{ color: '#1677ff' }}>More</span>
-                            </Popover>
-                        )}
                         cover={
-                            system.image ?
-                                (<SystemImage
-                                    systemId={system._id}
-                                    style={{ width: '100%', height: '220px', objectFit: 'cover' }}
-                                />) :
-                                (<img
-                                    alt="default"
-                                    src="https://api.mobifone.vn/images/banner/1744624612050_mobifone-32-years.jpg"
-                                    style={{ width: '100%', height: '220px', objectFit: 'cover' }}
-                                />)
+                            <div style={{ height: '180px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                {system.image ?
+                                    (<SystemImage
+                                        systemId={system._id}
+                                        style={{ width: '100%', height: 'auto', maxHeight: '100%', objectFit: 'contain' }}
+                                    />) :
+                                    (<img
+                                        alt="default"
+                                        src="https://api.mobifone.vn/images/banner/1744624612050_mobifone-32-years.jpg"
+                                        style={{ width: '100%', height: '220px', objectFit: 'cover' }}
+                                    />)
+                                }
+                            </div>
                         }
+                        bodyStyle={{
+                            backgroundColor: '#f5f5f5', // Màu xám nhạt
+                            padding: '16px'
+                        }}
                     >
                         <Meta
-                            avatar={<Avatar src="https://ppclink.com/wp-content/uploads/2021/12/icon_MyMobiFone.png" />}
-                            title={system.name}
+                            title={
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <span>{system.name}</span>
+                                    <Popover
+                                        content={(
+                                            <div style={{ maxWidth: 350, whiteSpace: 'normal', wordBreak: 'break-word' }}>
+                                                <p>Mô tả: {system.description}</p>
+                                                <p>Link truy cập: {system.linkAccess}</p>
+                                                <p>Tài liệu tham khảo: <DownloadButton system={system} />
+                                                </p>
+                                                <p>Đơn vị liên lạc: {system.contactPoint}</p>
+                                                <p>Đơn vị chủ quản: {system.managingUnit}</p>
+                                            </div>
+                                        )}
+                                        title={system.name}
+                                        trigger="hover"
+                                    >
+                                        <span style={{ color: '#1677ff', fontWeight: "normal", fontSize: "14px" }}>Info</span>
+                                    </Popover>
+                                </div>
+                            }
                             description={(
                                 <div style={{
                                     whiteSpace: 'nowrap',
@@ -117,8 +128,6 @@ const HomePage = () => {
 
     return (
         <>
-
-
             <Carousel autoplay>
                 {carouselImages.map((src, idx) => (
                     <div key={idx}>
@@ -162,9 +171,7 @@ const HomePage = () => {
                 </Form.Item>
             </Form>
 
-
-
-            {filteredTags.map((tag) => {
+            {filteredTags.map((tag, index) => {
                 const currentPage = pageMap[tag._id] || 1;
                 let listSystem = tag.listSystem || [];
 
@@ -180,7 +187,10 @@ const HomePage = () => {
 
                 return (
                     <React.Fragment key={tag._id}>
-                        <div style={{ marginTop: 40, margin: 20 }}>
+                        {/* Thêm đường kẻ ngang trước mỗi tag (trừ tag đầu tiên) */}
+                        {index > 0 && <Divider style={{ margin: '40px 0' }} />}
+
+                        <div style={{ marginTop: index === 0 ? 40 : 20, margin: 20 }}>
                             <Title level={3}>{tag.name}</Title>
 
                             {total > 0 ? (
