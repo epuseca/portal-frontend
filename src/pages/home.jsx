@@ -6,7 +6,7 @@ import {
     SettingOutlined
 } from "@ant-design/icons";
 import {
-    Avatar, Card, List, Carousel, Row, Col, Button, Pagination, Typography, Popover, Empty, Form, Select, Input, FloatButton, Divider
+    Avatar, Card, List, Carousel, Row, Col, Button, Pagination, Typography, Popover, Empty, Form, Select, Input, FloatButton, Divider, Spin
 } from 'antd';
 import React, { useEffect, useState } from "react";
 import '../styles/home/slideShow.css';
@@ -22,17 +22,21 @@ const HomePage = () => {
     const [pageMap, setPageMap] = useState({});
     const [filteredTagIds, setFilteredTagIds] = useState([]);
     const [searchKeyword, setSearchKeyword] = useState('');
+    const [loading, setLoading] = useState(true); // Thêm loading state
     const pageSize = 8;
 
     useEffect(() => {
         const fetchTags = async () => {
             try {
+                setLoading(true); // Bắt đầu loading
                 const res = await getTagApiHome();
                 if (!res?.message) {
                     setTagList(res);
                 }
             } catch (error) {
                 console.error("Lỗi khi gọi API getTagApi:", error);
+            } finally {
+                setLoading(false); // Kết thúc loading
             }
         };
         fetchTags();
@@ -127,6 +131,21 @@ const HomePage = () => {
     const filteredTags = filteredTagIds.length > 0
         ? tagList.filter(tag => filteredTagIds.includes(tag._id))
         : tagList;
+
+    // Nếu đang loading, hiển thị spinner ở giữa màn hình
+    if (loading) {
+        return (
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                minHeight: '80vh',
+                flexDirection: 'column'
+            }}>
+                <Spin size="large" tip="Loading homepage..." />
+            </div>
+        );
+    }
 
     return (
         <>

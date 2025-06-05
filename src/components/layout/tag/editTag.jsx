@@ -71,7 +71,7 @@ const EditTagModal = ({ visible, onClose, tag, onUpdate }) => {
                 <Form.Item
                     name="description"
                     label="Description"
-                    rules={[{ required: true, message: "Please input description" }]}
+                    rules={[{ required: false }]}
                 >
                     <Input />
                 </Form.Item>

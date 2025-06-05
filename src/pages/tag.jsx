@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { notification, Table, Menu, Row, Col, Typography, Button, Popover, Input } from "antd";
+import { notification, Table, Menu, Row, Col, Typography, Button, Popover, Input, Spin } from "antd";
 import { delTagApi, getTagApi } from "../utils/api";
 
 import MenuPage from "../components/layout/menu";
@@ -10,21 +10,34 @@ const TagPage = () => {
     const [dataSource, setDataSource] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentTag, setCurrentTag] = useState(null);
-    const [searchText, setSearchText] = useState(''); // Thêm searchText
+    const [searchText, setSearchText] = useState('');
+    const [loading, setLoading] = useState(true); // Thêm loading state
+
     useEffect(() => {
         const fetchUser = async () => {
-            const res = await getTagApi();
-            if (!res?.message) {
-                setDataSource(res);
-            } else {
+            try {
+                setLoading(true); // Bắt đầu loading
+                const res = await getTagApi();
+                if (!res?.message) {
+                    setDataSource(res);
+                } else {
+                    notification.error({
+                        message: "Unauthorized",
+                        description: res.message,
+                    });
+                }
+            } catch (error) {
                 notification.error({
-                    message: "Unauthorized",
-                    description: res.message,
+                    message: "Error",
+                    description: "Failed to fetch tags",
                 });
+            } finally {
+                setLoading(false); // Kết thúc loading
             }
         };
         fetchUser();
     }, []);
+
     const handleDelete = async (id) => {
         try {
             await delTagApi(id);
@@ -34,6 +47,7 @@ const TagPage = () => {
             notification.error({ message: "Delete failed", description: err.message });
         }
     };
+
     const handleEdit = (record) => {
         setCurrentTag(record);
         setIsModalOpen(true);
@@ -44,6 +58,7 @@ const TagPage = () => {
             prev.map(tag => tag._id === updatedTag._id ? updatedTag : tag)
         );
     };
+
     const columns = [
         {
             title: "Name",
@@ -79,10 +94,6 @@ const TagPage = () => {
                 );
             },
         },
-        // {
-        //     title: "Id",
-        //     dataIndex: "_id",
-        // },
         {
             title: 'Action',
             width: 200,
@@ -98,6 +109,7 @@ const TagPage = () => {
     const onClick = (e) => {
         console.log("Menu click ", e);
     };
+
     const filteredData = dataSource.filter(tag =>
         tag.name?.toLowerCase().includes(searchText.toLowerCase()) ||
         tag.description?.toLowerCase().includes(searchText.toLowerCase())
@@ -131,13 +143,15 @@ const TagPage = () => {
                         </Col>
                     </Row>
 
-                    <Table
-                        dataSource={filteredData}
-                        columns={columns}
-                        rowKey="_id"
-                        pagination={{ pageSize: 7 }}
-                        scroll={{ x: "100%" }}
-                    />
+                    <Spin spinning={loading} size="large" >
+                        <Table
+                            dataSource={filteredData}
+                            columns={columns}
+                            rowKey="_id"
+                            pagination={{ pageSize: 7 }}
+                            scroll={{ x: "100%" }}
+                        />
+                    </Spin>
                 </Col>
             </Row>
 
@@ -149,7 +163,6 @@ const TagPage = () => {
             />
         </div>
     );
-
 };
 
 export default TagPage;

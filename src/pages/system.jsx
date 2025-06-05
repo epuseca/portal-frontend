@@ -1,4 +1,4 @@
-import { Button, Col, Input, notification, Row, Table, Typography } from "antd";
+import { Button, Col, Input, notification, Row, Table, Typography, Spin } from "antd";
 import { useEffect, useState } from "react";
 import { delSystemApi, downloadSystemDocumentApi, getSystemApi } from "../utils/api";
 import MenuPage from "../components/layout/menu";
@@ -11,20 +11,31 @@ const SystemPage = () => {
     const [dataSource, setDataSource] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentSystem, setCurrentSystem] = useState(null);
-    const [searchText, setSearchText] = useState(''); // Thêm state searchText
+    const [searchText, setSearchText] = useState('');
     const [imageReloadKey, setImageReloadKey] = useState(Date.now());
+    const [loading, setLoading] = useState(true); // Thêm loading state
 
     useEffect(() => {
         const fetchUser = async () => {
-            const res = await getSystemApi();
-            console.log("RES", res);
-            if (!res?.message) {
-                setDataSource(res);
-            } else {
+            try {
+                setLoading(true); // Bắt đầu loading
+                const res = await getSystemApi();
+                console.log("RES", res);
+                if (!res?.message) {
+                    setDataSource(res);
+                } else {
+                    notification.error({
+                        message: "Unauthorized",
+                        description: res.message
+                    });
+                }
+            } catch (error) {
                 notification.error({
-                    message: "Unauthorized",
-                    description: res.message
+                    message: "Error",
+                    description: "Failed to fetch systems"
                 });
+            } finally {
+                setLoading(false); // Kết thúc loading
             }
         };
         fetchUser();
@@ -147,16 +158,19 @@ const SystemPage = () => {
                             />
                         </Col>
                     </Row>
-                    <Table
-                        dataSource={filteredData}
-                        columns={columns}
-                        rowKey={"_id"}
-                        pagination={{ pageSize: 7 }}
-                        scroll={{ x: "100%" }}
-                    />
+                    
+                    <Spin spinning={loading} size="large">
+                        <Table
+                            dataSource={filteredData}
+                            columns={columns}
+                            rowKey={"_id"}
+                            pagination={{ pageSize: 7 }}
+                            scroll={{ x: "100%" }}
+                        />
+                    </Spin>
                 </Col>
-
             </Row>
+            
             <EditSystemModal
                 visible={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
