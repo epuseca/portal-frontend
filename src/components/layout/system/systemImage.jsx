@@ -9,13 +9,13 @@ const SystemImage = ({ systemId,reloadKey, style }) => {
     useEffect(() => {
         const fetchSystem = async () => {
             try {
-                const system = await getSystemByIdApi(systemId);
-                if (!system || !system.image || !system.image.data) {
-                    setImageUrl(null);
-                } else {
-                    const url = await getImageSystemApi(systemId);
-                    setImageUrl(url);
-                }
+                // const system = await getSystemByIdApi(systemId);
+                // if (!system || !system.image || !system.image.data) {
+                //     setImageUrl(null);
+                // } else {
+                const url = await getImageSystemApi(systemId);
+                setImageUrl(url);
+                // }
             } catch (error) {
                 console.error("Lỗi fetch system:", error);
                 setImageUrl(null);

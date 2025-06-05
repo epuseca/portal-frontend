@@ -6,7 +6,7 @@ import {
     SettingOutlined
 } from "@ant-design/icons";
 import {
-    Avatar, Card, List, Carousel, Row, Col, Button, Pagination, Typography, Popover, Empty, Form, Select, Input, BackTop, Divider
+    Avatar, Card, List, Carousel, Row, Col, Button, Pagination, Typography, Popover, Empty, Form, Select, Input, FloatButton, Divider
 } from 'antd';
 import React, { useEffect, useState } from "react";
 import '../styles/home/slideShow.css';
@@ -78,9 +78,11 @@ const HomePage = () => {
                                 }
                             </div>
                         }
-                        bodyStyle={{
-                            backgroundColor: '#f5f5f5', // Màu xám nhạt
-                            padding: '16px'
+                        styles={{
+                            body: {
+                                backgroundColor: '#f5f5f5', // Màu xám nhạt
+                                padding: '16px'
+                            }
                         }}
                     >
                         <Meta
@@ -219,7 +221,7 @@ const HomePage = () => {
                     </React.Fragment>
                 );
             })}
-            <BackTop />
+            <FloatButton.BackTop />
         </>
     );
 };
